@@ -1,0 +1,8 @@
+Recuperación de Información
+
+SRI:
+Dada una consulta, obtiene resultados relacionados
+
+Usuario -> Tarea -> Necesidad de info -> Consulta - [Búsqueda] -> Resulados ( Refinamiento a Necesidad y Consulta)
+
+Indexado + Retrieval = IR Model
