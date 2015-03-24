@@ -11,7 +11,7 @@ while True:
 of = open(f+'_output', 'w')
 
 
-cosa = 0
+laLinea = 0
 x = 0
 urls = []
 twitpics = []
@@ -19,28 +19,30 @@ hashtags = []
 users = []
 
 for line in myFile:
-	cosa = line.split('\t')
+	laLinea = line.split('\t')
 	if line.find('tweet_id') < 0:
-		if cosa[13]:
-			cosa[13] = cosa[13].replace( '\n', '')
-			urls = re.findall( 'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', cosa[13] )
-			twitpics = re.findall( '(?:pic.twitter)[^"\' ]+', cosa[13] )
-			hashtags = re.findall( '(?:#)[^"\' ]+', cosa[13] )
-			users = re.findall( '(?:@)[^"\' ]+', cosa[13] )
+		tweet = laLinea[len(laLinea)-1]
+		tweet = tweet.replace( '\n', '')
+		tweet = tweet.replace( '\r', '')
+		if tweet:
+			urls = re.findall( 'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', tweet )
+			twitpics = re.findall( '(?:pic.twitter)[^"\' ]+', tweet )
+			hashtags = re.findall( '(?:#)[^"\' ]+', tweet )
+			users = re.findall( '(?:@)[^"\' ]+', tweet )
 			if len(urls) > 0:
 				for x in range( len(urls) ):
-					cosa[13] = cosa[13].replace( urls[x], '[url]')
+					tweet = tweet.replace( urls[x], '[url]')
 			urls = []
 			if len(twitpics) > 0:
 				for x in range( len(twitpics) ):
-					cosa[13] = cosa[13].replace( twitpics[x], '[url]')
+					tweet = tweet.replace( twitpics[x], '[url]')
 			twitpics = []
 			if len(hashtags) > 0:
 				for x in range( len(hashtags) ):
-					cosa[13] = cosa[13].replace( hashtags[x], '[hashtag]')
+					tweet = tweet.replace( hashtags[x], '[hashtag]')
 			hashtags = []
 			if len(users) > 0:
 				for x in range( len(users) ):
-					cosa[13] = cosa[13].replace( users[x], '[user]')
+					tweet = tweet.replace( users[x], '[user]')
 			users = []
-			of.write(cosa[13].lower()+'\n')
+			of.write(tweet.lower()+'\n')
