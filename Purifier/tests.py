@@ -1,4 +1,5 @@
 import re
+import os
 
 while True:
 	try:
@@ -8,16 +9,12 @@ while True:
 	except IOError:
 		print "File not found, try again ;D"
 
-of = open(f+'_output', 'w')
-
-
 laLinea = 0
 x = 0
-urls = []
-twitpics = []
-hashtags = []
-users = []
+removeMe = []
 tempCont = []
+
+openedFile = open(f+'_output', 'w')
 
 for line in myFile:
 	laLinea = line.split('\t')
@@ -28,28 +25,30 @@ for line in myFile:
 		tweet = tweet.replace( '\r', '')
 		
 		if tweet:
-
-			urls = re.findall( 'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', tweet )
-			twitpics = re.findall( '(?:pic.twitter)[^"\' ]+', tweet )
-			hashtags = re.findall( '(?:#)[^"\' ]+', tweet )
-			users = re.findall( '(?:@)[^"\' ]+', tweet )
 			
-			if len(urls) > 0:
-				for x in range( len(urls) ):
-					tweet = tweet.replace( urls[x], '')
-			urls = []
-			if len(twitpics) > 0:
-				for x in range( len(twitpics) ):
-					tweet = tweet.replace( twitpics[x], '')
-			twitpics = []
-			if len(hashtags) > 0:
-				for x in range( len(hashtags) ):
-					tweet = tweet.replace( hashtags[x], '')
-			hashtags = []
-			if len(users) > 0:
-				for x in range( len(users) ):
-					tweet = tweet.replace( users[x], '')
-			users = []
+			removeMe = re.findall( 'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', tweet )
+			if len(removeMe) > 0:
+				for x in range( len(removeMe) ):
+					tweet = tweet.replace( removeMe[x], '')
+			removeMe = []
+
+			removeMe = re.findall( '(?:pic.twitter)[^"\' ]+', tweet )
+			if len(removeMe) > 0:
+				for x in range( len(removeMe) ):
+					tweet = tweet.replace( removeMe[x], '')
+			removeMe = []
+
+			removeMe = re.findall( '(?:#)[^"\' ]+', tweet )
+			if len(removeMe) > 0:
+				for x in range( len(removeMe) ):
+					tweet = tweet.replace( removeMe[x], '')
+			removeMe = []
+
+			removeMe = re.findall( '(?:@)[^"\' ]+', tweet )
+			if len(removeMe) > 0:
+				for x in range( len(removeMe) ):
+					tweet = tweet.replace( removeMe[x], '')
+			removeMe = []
 
 			tweet = ''.join(c for c in tweet if c.isalnum() or c == ' ')
 
@@ -65,4 +64,4 @@ for line in myFile:
 			tempCont = []
 
 			if tweet != '':
-				of.write(tweet.lower()+'\n')
+				openedFile.write(tweet.lower()+'\n')

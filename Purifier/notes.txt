@@ -6,3 +6,15 @@ Dada una consulta, obtiene resultados relacionados
 Usuario -> Tarea -> Necesidad de info -> Consulta - [Búsqueda] -> Resulados ( Refinamiento a Necesidad y Consulta)
 
 Indexado + Retrieval = IR Model
+
+Recuerdo: # de documentos relevantes / # total de documentos relevantes
+
+Precisión: # de documentos relevantes recuperados / # total de documentos recuperados
+
+Medida F: Media armónica entre recall y precision
+
+MAP: Mean Average Precision, qué tan buena es la máquina en colocar documentos más relevante al principio de la lista
+
+Query expansion
+
+Clustering - Pruebas de
