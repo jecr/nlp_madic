@@ -18,3 +18,11 @@ MAP: Mean Average Precision, qué tan buena es la máquina en colocar documentos
 Query expansion
 
 Clustering - Pruebas de
+
+=================================================================================================================
+
+Convertir tuits en archivos, cada tuit es un archivo
+
+Ideal: Cada carpeta de tema agrupa los tuits del tema
+Problema: Comparar cada ID de tuit contra el archivo de GoldStandard (Lento), ANTES de guardarlos en sus carpetas
+Realidad: Esto no va a suceder cuando se ponga en práctica
