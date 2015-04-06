@@ -14,11 +14,13 @@ import glob
 
 ruta = raw_input("Give me a path to follow ~(ºoº)~:")
 
-def cleanse( thFileName ):
+theFirst = []
+
+def cleanse( theFileName ):
 
 	while True:
 		try:
-			myFile = open(thFileName, 'r')
+			myFile = open(theFileName, 'r')
 			break
 		except IOError:
 			print "File not found, try again ;D"
@@ -33,6 +35,7 @@ def cleanse( thFileName ):
 		if line.find('tweet_id') < 0:
 			
 			tweet = laLinea[len(laLinea)-1]
+			
 			tweet = tweet.replace( '\n', '')
 			tweet = tweet.replace( '\r', '')
 			
@@ -76,11 +79,14 @@ def cleanse( thFileName ):
 				tempCont = []
 
 				if tweet != '':
-					openedFile.write(tweet.lower()+'\n')
+					# openedFile.write(tweet.lower()+'\n')
+					theFirst.append(tweet.lower()+'\n')
 	return
 
-openedFile = open('stuff'+'_output', 'w')
+# openedFile = open('stuff'+'_output', 'w')
 
 for filename in glob.glob(os.path.join(ruta, '*.2')):
 	print filename
 	cleanse(filename)
+
+print len(theFirst)
