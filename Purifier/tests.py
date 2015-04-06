@@ -1,6 +1,7 @@
 # -*- coding: UTF-8 -*-
 import re
 import os
+import glob
 
 # while True:
 # 	try:
@@ -13,7 +14,15 @@ import os
 
 ruta = raw_input("Give me a path to follow ~(ºoº)~:")
 
-def cleanse():
+def cleanse( thFileName ):
+
+	while True:
+		try:
+			myFile = open(thFileName, 'r')
+			break
+		except IOError:
+			print "File not found, try again ;D"
+
 	laLinea = 0
 	x = 0
 	removeMe = []
@@ -66,6 +75,14 @@ def cleanse():
 				tweet = ' '.join( tweet.split() )
 				tempCont = []
 
+				print tweet
+
 				if tweet != '':
 					openedFile.write(tweet.lower()+'\n')
 	return
+
+openedFile = open('stuff'+'_output', 'w')
+
+for filename in glob.glob(os.path.join(ruta, '*.2')):
+	print filename
+	cleanse(filename)
