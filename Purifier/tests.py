@@ -129,3 +129,24 @@ entitiesList = open('lista_entidades', 'w')
 
 for laentidad in entities:
 	entitiesList.write( str( entities.index( laentidad ) ) + ' ' + laentidad + '\n' )
+
+newpath = r'Output' 
+if not os.path.exists(newpath): os.makedirs(newpath)
+
+whereAmI = 0;
+
+for oneTweet in theFirst:
+	perc = round( 100 * ( float(theFirst.index(oneTweet)) / float(len(theFirst)) ), 1 )
+	if perc != whereAmI:
+		whereAmI = perc
+		print whereAmI
+	
+	for someEntity in entities:
+		newpath = r'Output/ENT' + str( entities.index( someEntity ) )
+		if not os.path.exists(newpath): os.makedirs(newpath)
+		if entities.index(someEntity) == int( oneTweet[2] ):
+			fileNum = 0
+			for fileCount in glob.glob( os.path.join( 'Output/ENT' + str( entities.index( someEntity ) ), '*.txt' ) ):
+				fileNum = fileNum + 1
+			tweetFile = open( 'Output/ENT' + str( entities.index( someEntity ) ) + '/' + str( fileNum + 1 ) + '.txt', 'w' ) 
+			tweetFile.write( oneTweet[1] )
