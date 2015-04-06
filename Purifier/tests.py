@@ -136,10 +136,10 @@ if not os.path.exists(newpath): os.makedirs(newpath)
 whereAmI = 0;
 
 for oneTweet in theFirst:
-	perc = round( 100 * ( float(theFirst.index(oneTweet)) / float(len(theFirst)) ), 1 )
+	perc = round( 100 * ( float(theFirst.index(oneTweet)) / float(len(theFirst)) ) )
 	if perc != whereAmI:
 		whereAmI = perc
-		print whereAmI
+		print str( whereAmI ) + '%'
 	
 	for someEntity in entities:
 		newpath = r'Output/ENT' + str( entities.index( someEntity ) )
