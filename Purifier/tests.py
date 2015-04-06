@@ -14,6 +14,10 @@ import glob
 
 ruta = raw_input("Give me a path to follow ~(ºoº)~:")
 
+# Aquí van a ir el tweet y su ID (sólo uno)
+combined = [0] * 2
+
+# Primer array combinado, todos los tuits con su ID
 theFirst = []
 
 def cleanse( theFileName ):
@@ -29,13 +33,16 @@ def cleanse( theFileName ):
 	x = 0
 	removeMe = []
 	tempCont = []
+	elID = []
 
 	for line in myFile:
 		laLinea = line.split('\t')
 		if line.find('tweet_id') < 0:
 			
 			tweet = laLinea[len(laLinea)-1]
-			
+
+			elID = laLinea[0]
+
 			tweet = tweet.replace( '\n', '')
 			tweet = tweet.replace( '\r', '')
 			
@@ -79,11 +86,19 @@ def cleanse( theFileName ):
 				tempCont = []
 
 				if tweet != '':
-					# openedFile.write(tweet.lower()+'\n')
-					theFirst.append(tweet.lower()+'\n')
+					combined[0] = elID
+					combined[1] = tweet.lower()
+
+					theFirst.append( combined )
+					
+					openedFile.write( combined[0] + ' ' + combined[1] + '\n' )
+
+		combined = []
+		combined = [0] * 2
+
 	return
 
-# openedFile = open('stuff'+'_output', 'w')
+openedFile = open('stuff'+'_output', 'w')
 
 for filename in glob.glob(os.path.join(ruta, '*.2')):
 	print filename
