@@ -15,10 +15,13 @@ import glob
 ruta = raw_input("Give me a path to follow ~(ºoº)~:")
 
 # Aquí van a ir el tweet y su ID (sólo uno)
-combined = [0] * 2
+combined = [0] * 3
 
 # Primer array combinado, todos los tuits con su ID
 theFirst = []
+
+# Lista de entidades
+entities = []
 
 def cleanse( theFileName ):
 
@@ -34,14 +37,23 @@ def cleanse( theFileName ):
 	removeMe = []
 	tempCont = []
 	elID = []
+	entity = []
 
 	for line in myFile:
 		laLinea = line.split('\t')
-		if line.find('tweet_id') < 0:
+		if line.find('tweet_id') < 0 and len(laLinea) > 10:
 			
+			# Asigna el tuit para su purificación			
 			tweet = laLinea[len(laLinea)-1]
 
+			# Asigna el ID
 			elID = laLinea[0]
+
+			# Asigna la entidad
+			entity = laLinea[2]
+
+			if entity not in entities:
+				entities.append(entity)
 
 			tweet = tweet.replace( '\n', '')
 			tweet = tweet.replace( '\r', '')
@@ -86,15 +98,22 @@ def cleanse( theFileName ):
 				tempCont = []
 
 				if tweet != '':
+					# Almacena el ID en la primer posición de combined
 					combined[0] = elID
+					# Almacena el tweet en lowercase en la segunda posición de combined
 					combined[1] = tweet.lower()
 
+					# Le agrega el número de entidad de acuerdo al arreglo de entidades
+					combined[2] = entities.index(entity)
+
+					# Va metiendo en theFirst TODOS los arreglos [ ID ][ Tuit ]
 					theFirst.append( combined )
 					
-					openedFile.write( combined[0] + ' ' + combined[1] + '\n' )
+					openedFile.write( str(combined[2]) + ' ' + combined[0] + ' ' + combined[1] + '\n' )
 
+		# Vacía el arreglo para volverlo a usar, vivan las 3 Rs
 		combined = []
-		combined = [0] * 2
+		combined = [0] * 3
 
 	return
 
@@ -104,4 +123,4 @@ for filename in glob.glob(os.path.join(ruta, '*.2')):
 	print filename
 	cleanse(filename)
 
-print len(theFirst)
+print len( entities )
