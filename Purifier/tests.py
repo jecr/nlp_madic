@@ -104,12 +104,12 @@ def cleanse( theFileName ):
 					combined[1] = tweet.lower()
 
 					# Le agrega el número de entidad de acuerdo al arreglo de entidades
-					combined[2] = entities.index(entity)
+					combined[2] = str( entities.index(entity) )
 
 					# Va metiendo en theFirst TODOS los arreglos [ ID ][ Tuit ]
 					theFirst.append( combined )
 					
-					openedFile.write( str(combined[2]) + ' ' + combined[0] + ' ' + combined[1] + '\n' )
+					openedFile.write( combined[2] + ' ' + combined[0] + ' ' + combined[1] + '\n' )
 
 		# Vacía el arreglo para volverlo a usar, vivan las 3 Rs
 		combined = []
@@ -117,10 +117,15 @@ def cleanse( theFileName ):
 
 	return
 
+
 openedFile = open('stuff'+'_output', 'w')
 
 for filename in glob.glob(os.path.join(ruta, '*.2')):
 	print filename
 	cleanse(filename)
 
-print len( entities )
+# Guarda las entidades en un archivo aparte, para referencia
+entitiesList = open('lista_entidades', 'w')
+
+for laentidad in entities:
+	entitiesList.write( str( entities.index( laentidad ) ) + ' ' + laentidad + '\n' )
