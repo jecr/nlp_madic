@@ -75,8 +75,6 @@ def cleanse( thFileName ):
 				tweet = ' '.join( tweet.split() )
 				tempCont = []
 
-				print tweet
-
 				if tweet != '':
 					openedFile.write(tweet.lower()+'\n')
 	return
