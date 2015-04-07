@@ -15,7 +15,7 @@ import glob
 ruta = raw_input("Give me a path to follow ~(ºoº)~:")
 
 # Aquí van a ir el tweet y su ID (sólo uno)
-combined = [0] * 4
+combined = [''] * 4
 
 # Primer array combinado, todos los tuits con su ID
 theFirst = []
@@ -112,14 +112,31 @@ def cleanse( theFileName ):
 						# Le agrega el número de entidad de acuerdo al arreglo de entidades
 						combined[2] = entity
 
+						while True:
+							try:
+								goldStand = open('goldstandard.dat', 'r')
+								break
+							except IOError:
+								print "goldstandard.dat not found"
+
+						for asd in goldStand:
+							if elID in asd:
+								asd = asd.replace('"','')
+								asd = asd.replace('\n','')
+								asd = asd.split('\t')
+								asd[2] = ''.join(c for c in asd[2] if c.isalnum() or c == ' ')
+								asd[2] = ' '.join( asd[2].split() )
+								asd[2] = asd[2].lower()
+								combined[3] = asd[2]
+
 						# Va metiendo en theFirst TODOS los arreglos [ ID ][ Tuit ]
 						theFirst.append( combined )
 						
-						openedFile.write( combined[2] + ' ' + combined[0] + ' ' + combined[1] + '\n' )
+						openedFile.write( combined[2] + ' ' + combined[3] + ' ' + combined[0] + ' ' + combined[1] + '\n' )
 
 		# Vacía el arreglo para volverlo a usar, vivan las 3 Rs
 		combined = []
-		combined = [0] * 4
+		combined = [''] * 4
 
 	return
 
@@ -134,7 +151,6 @@ while True:
 
 golden1 = []
 golden2 = [''] * 61
-golden3 = [0] * 61
 
 for linea in goldStand:
 	if linea.find('tweet_id') < 0:
@@ -147,19 +163,21 @@ for linea in goldStand:
 
 		if goldie[0] in golden1:
 			golden2[ golden1.index( goldie[0] ) ] += '\t' + goldie[2]
+# La lista golden1 contiene las entidades en orden?
 
-
-temas = open('lista_temas', 'w')
+# temas = open('lista_temas', 'w')
 for item in golden2:
 	linesplit = item.split('\t')
-	tempo = []	
+	tempo = []
 	for algo in linesplit:
+		algo = ''.join(c for c in algo if c.isalnum() or c == ' ')
+		algo = ' '.join( algo.split() )
+		algo = algo.lower()
 		if  algo not in tempo and algo != '':
 			tempo.append(algo)
 
 	golden2[ golden2.index(item) ] = sorted(tempo)
 # La lista golden2 contiene en orden de entidades los temas
-
 
 # Declaración del archivo donde van TODOS los tuits
 openedFile = open('all_tuits', 'w')
@@ -191,6 +209,7 @@ if seGuardan == 'y':
 	whereAmI = 0;
 
 	for oneTweet in theFirst:
+		# Esto es sólo para mostrar el porcentaje de avance
 		perc = round( 100 * ( float(theFirst.index(oneTweet)) / float(len(theFirst)) ) )
 		if perc != whereAmI:
 			whereAmI = perc
@@ -200,7 +219,17 @@ if seGuardan == 'y':
 		for someEntity in entities:
 			newpath = r'Output/ENT' + str( entities.index( someEntity ) )
 			if not os.path.exists(newpath): os.makedirs(newpath)
+
+			# Si la entidad del tuit  coincide con la entidad actual
 			if someEntity == oneTweet[2]:
 
-				tweetFile = open( 'Output/ENT' + str( entities.index( someEntity ) ) + '/' + str( oneTweet[0] ) + '.txt', 'w' )
-				tweetFile.write( oneTweet[1] )
+				#el indice de la identidad del tuit en entities es la posición en la que hay que buscar dentro de golden2 la similitud de termino
+				#crear carpeta con ese termino y meter dentro el tuit
+
+				for tema in golden2[ entities.index( oneTweet[2] ) ]:
+					newpath = r'Output/ENT' + str( entities.index( someEntity ) ) + '/' + 'TEM'+ str(golden2[ entities.index( oneTweet[2] ) ].index( tema ))
+					if not os.path.exists(newpath): os.makedirs(newpath)
+					
+					if tema == oneTweet[3]:
+						tweetFile = open( 'Output/ENT' + str( entities.index( someEntity ) ) + '/' + 'TEM'+ str(golden2[ entities.index( oneTweet[2] ) ].index( tema )) + '/' + str( oneTweet[0] ) + '.txt', 'w' )
+						tweetFile.write( oneTweet[1] )
