@@ -1,0 +1,29 @@
+Ejecutar weka con límite de memoria:
+java -Xmx[quantity]m -jar weka.jar
+
+Carga un .arrf
+java weka.core.converters.TextDirectoryLoader -dir [folder location] > [destinyDirectory][destinyFileName].arff
+
+Close Window
+
+Explorer -> open file (arff)
+
+Filter: String to word vector
+
+Clasificador perfecto:
+0's alrededor de la diagonal
+?|0|0
+0|?|0
+0|0|?
+
+Set a stemmer on parameters of filter - p.e. lovinstemmer
+
+java -jar DocToMatrix.jar /home/vjdarr/Documents/NLP/Files 0 /home/vjdarr/Documents/NLP/Salida/ F -SW /home/vjdarr/Documents/NLP/stop-words-spanish.txt -PM /home/vjdarr/Documents/NLP/symbols.txt
+
+java -jar TDMatrixToWekaFile.jar [Matriz] [Index] [.voc] [outputDirectory]
+
+Ejemplo1
+java -jar -Xmx5000m DocToMatrix.jar Output/ENT0/ 0 DTM/ F -SW stop-words-english.txt -PM symbols.txt 
+
+Ejemplo 2
+java -jar TDMatrixToWekaFile.jar DTM/MatrizTD_BOOLEANO.txt DTM/filesIndex.txt DTM/VocabularyGlobal.voc DTM/
