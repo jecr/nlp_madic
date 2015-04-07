@@ -227,9 +227,10 @@ if seGuardan == 'y':
 				#crear carpeta con ese termino y meter dentro el tuit
 
 				for tema in golden2[ entities.index( oneTweet[2] ) ]:
-					newpath = r'Output/ENT' + str( entities.index( someEntity ) ) + '/' + 'TEM'+ str(golden2[ entities.index( oneTweet[2] ) ].index( tema ))
-					if not os.path.exists(newpath): os.makedirs(newpath)
 					
 					if tema == oneTweet[3]:
+						newpath = r'Output/ENT' + str( entities.index( someEntity ) ) + '/' + 'TEM'+ str(golden2[ entities.index( oneTweet[2] ) ].index( tema ))
+						if not os.path.exists(newpath): os.makedirs(newpath)
+						
 						tweetFile = open( 'Output/ENT' + str( entities.index( someEntity ) ) + '/' + 'TEM'+ str(golden2[ entities.index( oneTweet[2] ) ].index( tema )) + '/' + str( oneTweet[0] ) + '.txt', 'w' )
 						tweetFile.write( oneTweet[1] )
