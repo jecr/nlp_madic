@@ -15,13 +15,15 @@ import glob
 ruta = raw_input("Give me a path to follow ~(ºoº)~:")
 
 # Aquí van a ir el tweet y su ID (sólo uno)
-combined = [0] * 3
+combined = [0] * 4
 
 # Primer array combinado, todos los tuits con su ID
 theFirst = []
 
 # Lista de entidades
 entities = []
+
+# =========================================================================================================
 
 def cleanse( theFileName ):
 
@@ -115,9 +117,11 @@ def cleanse( theFileName ):
 
 		# Vacía el arreglo para volverlo a usar, vivan las 3 Rs
 		combined = []
-		combined = [0] * 3
+		combined = [0] * 4
 
 	return
+
+# =========================================================================================================
 
 # Declaración del archivo donde van TODOS los tuits
 openedFile = open('all_tuits', 'w')
