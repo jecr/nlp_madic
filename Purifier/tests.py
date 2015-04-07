@@ -119,36 +119,42 @@ def cleanse( theFileName ):
 
 	return
 
-
-openedFile = open('stuff'+'_output', 'w')
+# Declaración del archivo donde van TODOS los tuits
+openedFile = open('all_tuits', 'w')
 
 for filename in glob.glob(os.path.join(ruta, '*.2')):
-	print filename
+	# Ejecuta la limpieza
 	cleanse(filename)
+
+print '\nLimpieza terminada \n\nTuits guardados en "all_tuits"'
 
 # Guarda las entidades en un archivo aparte, para referencia
 entitiesList = open('lista_entidades', 'w')
 
 for laentidad in entities:
 	entitiesList.write( str( entities.index( laentidad ) ) + ' ' + laentidad + '\n' )
+print '\nEntidades guardadas en "lista_entidades"'
 
-newpath = r'Output' 
-if not os.path.exists(newpath): os.makedirs(newpath)
+# Guarda los tuits en archivos individuales
+seGuardan = raw_input('\nQuieres que se guarden los tuits en archivos individuales? [Y/N]: ').lower()
+if seGuardan == 'y':
+	newpath = r'Output' 
+	if not os.path.exists(newpath): os.makedirs(newpath)
 
-whereAmI = 0;
+	whereAmI = 0;
 
-for oneTweet in theFirst:
-	perc = round( 100 * ( float(theFirst.index(oneTweet)) / float(len(theFirst)) ) )
-	if perc != whereAmI:
-		whereAmI = perc
-		print str( whereAmI ) + '%'
-	
-	for someEntity in entities:
-		newpath = r'Output/ENT' + str( entities.index( someEntity ) )
-		if not os.path.exists(newpath): os.makedirs(newpath)
-		if entities.index(someEntity) == int( oneTweet[2] ):
-			fileNum = 0
-			for fileCount in glob.glob( os.path.join( 'Output/ENT' + str( entities.index( someEntity ) ), '*.txt' ) ):
-				fileNum = fileNum + 1
-			tweetFile = open( 'Output/ENT' + str( entities.index( someEntity ) ) + '/' + str( fileNum + 1 ) + '.txt', 'w' ) 
-			tweetFile.write( oneTweet[1] )
+	for oneTweet in theFirst:
+		perc = round( 100 * ( float(theFirst.index(oneTweet)) / float(len(theFirst)) ) )
+		if perc != whereAmI:
+			whereAmI = perc
+			print str( whereAmI ) + '%'
+		
+		for someEntity in entities:
+			newpath = r'Output/ENT' + str( entities.index( someEntity ) )
+			if not os.path.exists(newpath): os.makedirs(newpath)
+			if entities.index(someEntity) == int( oneTweet[2] ):
+				fileNum = 0
+				for fileCount in glob.glob( os.path.join( 'Output/ENT' + str( entities.index( someEntity ) ), '*.txt' ) ):
+					fileNum = fileNum + 1
+				tweetFile = open( 'Output/ENT' + str( entities.index( someEntity ) ) + '/' + str( fileNum + 1 ) + '.txt', 'w' ) 
+				tweetFile.write( oneTweet[1] )
