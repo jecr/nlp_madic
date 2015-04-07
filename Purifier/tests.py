@@ -56,8 +56,10 @@ def cleanse( theFileName ):
 				# Asigna la entidad
 				entity = laLinea[2]
 
-				if entity not in entities:
-					entities.append(entity)
+				#if entity not in entities:
+				#	entities.append(entity)
+
+				#entities.sort()
 
 				tweet = tweet.replace( '\n', '')
 				tweet = tweet.replace( '\r', '')
@@ -108,7 +110,7 @@ def cleanse( theFileName ):
 						combined[1] = tweet.lower()
 
 						# Le agrega el número de entidad de acuerdo al arreglo de entidades
-						combined[2] = str( entities.index(entity) )
+						combined[2] = entity
 
 						# Va metiendo en theFirst TODOS los arreglos [ ID ][ Tuit ]
 						theFirst.append( combined )
@@ -123,6 +125,42 @@ def cleanse( theFileName ):
 
 # =========================================================================================================
 
+while True:
+	try:
+		goldStand = open('goldstandard.dat', 'r')
+		break
+	except IOError:
+		print "goldstandard.dat not found"
+
+golden1 = []
+golden2 = [''] * 61
+golden3 = [0] * 61
+
+for linea in goldStand:
+	if linea.find('tweet_id') < 0:
+		linea = linea.replace( '\n', '')
+		linea = linea.replace( '"', '')
+		goldie = linea.split('\t')
+		
+		if goldie[0] not in golden1:
+			golden1.append( goldie[0] )
+
+		if goldie[0] in golden1:
+			golden2[ golden1.index( goldie[0] ) ] += '\t' + goldie[2]
+
+
+temas = open('lista_temas', 'w')
+for item in golden2:
+	linesplit = item.split('\t')
+	tempo = []	
+	for algo in linesplit:
+		if  algo not in tempo and algo != '':
+			tempo.append(algo)
+
+	golden2[ golden2.index(item) ] = sorted(tempo)
+# La lista golden2 contiene en orden de entidades los temas
+
+
 # Declaración del archivo donde van TODOS los tuits
 openedFile = open('all_tuits', 'w')
 
@@ -132,12 +170,17 @@ for filename in glob.glob(os.path.join(ruta, '*.2')):
 
 print '\nLimpieza terminada \n\nTuits guardados en "all_tuits"'
 
-# Guarda las entidades en un archivo aparte, para referencia
-entitiesList = open('lista_entidades', 'w')
+#Abre el archivo lista de entidades y lo convierte en un arreglo
+while True:
+	try:
+		enti = open('lista_entidades', 'r')
+		break
+	except IOError:
+		print "lista_entidades is missing\n"
 
-for laentidad in entities:
-	entitiesList.write( str( entities.index( laentidad ) ) + ' ' + laentidad + '\n' )
-print '\nEntidades guardadas en "lista_entidades"'
+for e in enti:
+	e = e.replace('\n','')
+	entities.append(e)
 
 # Guarda los tuits en archivos individuales
 seGuardan = raw_input('\nQuieres que se guarden los tuits en archivos individuales? [Y/N]: ').lower()
@@ -153,10 +196,11 @@ if seGuardan == 'y':
 			whereAmI = perc
 			print str( whereAmI ) + '%'
 		
+		# Para cada entidad dentro de entities, crea una carpeta con su index
 		for someEntity in entities:
 			newpath = r'Output/ENT' + str( entities.index( someEntity ) )
 			if not os.path.exists(newpath): os.makedirs(newpath)
-			if entities.index(someEntity) == int( oneTweet[2] ):
+			if someEntity == oneTweet[2]:
 
 				tweetFile = open( 'Output/ENT' + str( entities.index( someEntity ) ) + '/' + str( oneTweet[0] ) + '.txt', 'w' )
 				tweetFile.write( oneTweet[1] )
