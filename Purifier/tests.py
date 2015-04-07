@@ -41,75 +41,77 @@ def cleanse( theFileName ):
 
 	for line in myFile:
 		laLinea = line.split('\t')
+		# Si encuentra el texto tweet_id, ignora el renglón
 		if line.find('tweet_id') < 0 and len(laLinea) > 10:
-			
-			# Asigna el tuit para su purificación			
-			tweet = laLinea[len(laLinea)-1]
+			# Si el tweet está en inglés
+			if laLinea[4] == 'EN':
+				# Asigna el tuit para su purificación			
+				tweet = laLinea[len(laLinea)-1]
 
-			# Asigna el ID
-			elID = laLinea[0]
+				# Asigna el ID
+				elID = laLinea[0]
 
-			# Asigna la entidad
-			entity = laLinea[2]
+				# Asigna la entidad
+				entity = laLinea[2]
 
-			if entity not in entities:
-				entities.append(entity)
+				if entity not in entities:
+					entities.append(entity)
 
-			tweet = tweet.replace( '\n', '')
-			tweet = tweet.replace( '\r', '')
-			
-			if tweet:
+				tweet = tweet.replace( '\n', '')
+				tweet = tweet.replace( '\r', '')
 				
-				removeMe = re.findall( 'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', tweet )
-				if len(removeMe) > 0:
-					for x in range( len(removeMe) ):
-						tweet = tweet.replace( removeMe[x], '')
-				removeMe = []
-
-				removeMe = re.findall( '(?:pic.twitter)[^"\' ]+', tweet )
-				if len(removeMe) > 0:
-					for x in range( len(removeMe) ):
-						tweet = tweet.replace( removeMe[x], '')
-				removeMe = []
-
-				removeMe = re.findall( '(?:#)[^"\' ]+', tweet )
-				if len(removeMe) > 0:
-					for x in range( len(removeMe) ):
-						tweet = tweet.replace( removeMe[x], '')
-				removeMe = []
-
-				removeMe = re.findall( '(?:@)[^"\' ]+', tweet )
-				if len(removeMe) > 0:
-					for x in range( len(removeMe) ):
-						tweet = tweet.replace( removeMe[x], '')
-				removeMe = []
-
-				tweet = ''.join(c for c in tweet if c.isalnum() or c == ' ')
-
-				laLinea = tweet.split(' ')
-				for palabra in laLinea:
-					if  palabra.isalpha() != True:
-						palabra = ''
-					if palabra != ' ':
-						tempCont.append(palabra)
-
-				tweet = ' '.join( tempCont )
-				tweet = ' '.join( tweet.split() )
-				tempCont = []
-
-				if tweet != '':
-					# Almacena el ID en la primer posición de combined
-					combined[0] = elID
-					# Almacena el tweet en lowercase en la segunda posición de combined
-					combined[1] = tweet.lower()
-
-					# Le agrega el número de entidad de acuerdo al arreglo de entidades
-					combined[2] = str( entities.index(entity) )
-
-					# Va metiendo en theFirst TODOS los arreglos [ ID ][ Tuit ]
-					theFirst.append( combined )
+				if tweet:
 					
-					openedFile.write( combined[2] + ' ' + combined[0] + ' ' + combined[1] + '\n' )
+					removeMe = re.findall( 'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', tweet )
+					if len(removeMe) > 0:
+						for x in range( len(removeMe) ):
+							tweet = tweet.replace( removeMe[x], '')
+					removeMe = []
+
+					removeMe = re.findall( '(?:pic.twitter)[^"\' ]+', tweet )
+					if len(removeMe) > 0:
+						for x in range( len(removeMe) ):
+							tweet = tweet.replace( removeMe[x], '')
+					removeMe = []
+
+					removeMe = re.findall( '(?:#)[^"\' ]+', tweet )
+					if len(removeMe) > 0:
+						for x in range( len(removeMe) ):
+							tweet = tweet.replace( removeMe[x], '')
+					removeMe = []
+
+					removeMe = re.findall( '(?:@)[^"\' ]+', tweet )
+					if len(removeMe) > 0:
+						for x in range( len(removeMe) ):
+							tweet = tweet.replace( removeMe[x], '')
+					removeMe = []
+
+					tweet = ''.join(c for c in tweet if c.isalnum() or c == ' ')
+
+					laLinea = tweet.split(' ')
+					for palabra in laLinea:
+						if  palabra.isalpha() != True:
+							palabra = ''
+						if palabra != ' ':
+							tempCont.append(palabra)
+
+					tweet = ' '.join( tempCont )
+					tweet = ' '.join( tweet.split() )
+					tempCont = []
+
+					if tweet != '':
+						# Almacena el ID en la primer posición de combined
+						combined[0] = elID
+						# Almacena el tweet en lowercase en la segunda posición de combined
+						combined[1] = tweet.lower()
+
+						# Le agrega el número de entidad de acuerdo al arreglo de entidades
+						combined[2] = str( entities.index(entity) )
+
+						# Va metiendo en theFirst TODOS los arreglos [ ID ][ Tuit ]
+						theFirst.append( combined )
+						
+						openedFile.write( combined[2] + ' ' + combined[0] + ' ' + combined[1] + '\n' )
 
 		# Vacía el arreglo para volverlo a usar, vivan las 3 Rs
 		combined = []
