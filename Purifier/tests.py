@@ -2,6 +2,8 @@
 import re
 import os
 import glob
+import nltk
+from nltk.corpus import wordnet as wn
 
 # while True:
 # 	try:
@@ -24,6 +26,36 @@ theFirst = []
 entities = []
 
 # =========================================================================================================
+
+def runner( palabra1, palabra2 ):
+	terminos1 = []
+	terminos2 = []
+	
+	for algo in wn.synsets( palabra1 ):
+		terminos1.append( str(algo.name()) )
+
+
+	for algo in wn.synsets( palabra2 ):
+		terminos2.append( str(algo.name()) )
+
+	score = 0
+	ganador = ''
+	for sent1 in terminos1:
+		sent1 = wn.synset(sent1)
+		for sent2 in terminos2:
+			sent2 = wn.synset(sent2)
+			hyperonimo = sent1.lowest_common_hypernyms( sent2 )
+			if hyperonimo != []:
+				hyperonimo = str(hyperonimo[0].name())
+
+				points = wn.synset( hyperonimo ).min_depth()
+				if points > score:
+					score = points
+					ganador = hyperonimo
+	ganador = ganador.split('.')
+	ganador = ganador[0]
+	ganador = ganador.replace('_',' ')
+	return ganador
 
 def cleanse( theFileName ):
 
@@ -106,8 +138,25 @@ def cleanse( theFileName ):
 					if tweet != '':
 						# Almacena el ID en la primer posición de combined
 						combined[0] = elID
-						# Almacena el tweet en lowercase en la segunda posición de combined
-						combined[1] = tweet.lower()
+						
+						# Extiende el tuit
+						sentence = tweet.lower()
+
+						sentence = sentence.split()
+
+						newSentence = []
+
+						for word in sentence:
+							newSentence.append( word )
+							if sentence.index(word) + 1 < len(sentence):
+								expanded = runner( word, sentence[ sentence.index(word) + 1 ] )
+								newSentence.append( expanded )
+
+						newSentence = ' '.join( newSentence )
+						newSentence = ' '.join( newSentence.split() )
+
+						# Después del procesado extensivo, guarda el tuit en la posición 1 de combined
+						combined[1] = newSentence
 
 						# Le agrega el número de entidad de acuerdo al arreglo de entidades
 						combined[2] = entity
