@@ -1,6 +1,7 @@
 # -*- coding: UTF-8 -*-
 import nltk
 from nltk.corpus import wordnet as wn
+from nltk.corpus import stopwords
 
 def runner( palabra1, palabra2 ):
 	terminos1 = []
@@ -35,6 +36,8 @@ def runner( palabra1, palabra2 ):
 sentence = raw_input("Give me a sentence (English only): ")
 
 sentence = sentence.split()
+
+sentence = [w for w in sentence if not w in stopwords.words('english')]
 
 newSentence = []
 

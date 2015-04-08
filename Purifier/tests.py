@@ -4,6 +4,7 @@ import os
 import glob
 import nltk
 from nltk.corpus import wordnet as wn
+from nltk.corpus import stopwords
 
 # while True:
 # 	try:
@@ -143,6 +144,8 @@ def cleanse( theFileName ):
 						sentence = tweet.lower()
 
 						sentence = sentence.split()
+
+						sentence = [w for w in sentence if not w in stopwords.words('english')]
 
 						newSentence = []
 
