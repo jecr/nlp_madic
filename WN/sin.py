@@ -4,34 +4,43 @@ from nltk.corpus import wordnet as wn
 from nltk.corpus import stopwords
 
 def runner( palabra1 ):
-	terminos1 = []
-	sign = wn.synsets(palabra1)
 
-	firstOne = sign[0].name()
+	# sinon =  wn.synsets( palabra1 )[0].lemma_names()
 
-	print firstOne
+	sinons = []
 
-	print wn.synset( 'cat' ).lemma_names
+	for x in wn.synsets( palabra1 ):
+		for y in x.lemma_names():
+			if y not in sinons:
+				sinons.append( y )
 
-	#lpal = ' '.join( lpal )
-	#lpal = ' '.join( lpal.split() )
+	sinons = ' '.join( sinons )
 
-	return 'pato'
+	sinons = ' '.join( sinons.split() )
 
-sentence = raw_input("Give me a sentence (English only): ")
+	return sinons
 
-sentence = sentence.split()
+def splitter( sentence ):
+	sentence = sentence.split()
 
-sentence = [w for w in sentence if not w in stopwords.words('english')]
+	sentence = [w for w in sentence if not w in stopwords.words('english')]
 
-newSentence = []
+	newSentence = []
 
-for word in sentence:
-	newSentence.append( word )
-	expanded = runner( word )
-	newSentence.append( expanded )
+	for word in sentence:
+		
+		expanded = runner( word )
+		
+		if expanded == '':
+			newSentence.append( word )
+		else:
+			newSentence.append( expanded )
 
-newSentence = ' '.join( newSentence )
-newSentence = ' '.join( newSentence.split() )
+	newSentence = ' '.join( newSentence )
+	newSentence = ' '.join( newSentence.split() )
 
-print newSentence
+	return newSentence
+
+thein = raw_input("Give me a word: ")
+
+print splitter( thein )
